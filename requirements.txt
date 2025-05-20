@@ -1,0 +1,13 @@
+# DO NOT include azure-functions-worker in this file
+# The Python Worker is managed by Azure Functions platform
+# Manually managing azure-functions-worker may cause unexpected issues
+
+# PYTHON VERSION 3.10 OR HIGHER
+azure-cosmos==4.9.0
+azure-functions==1.23.0
+azure-identity==1.21.0
+azure-keyvault-secrets==4.9.0
+azure-mgmt-storage==22.2.0
+pandas==2.2.3
+python-telegram-bot==22.0
+azure-mgmt-cosmosdb==9.7.0
