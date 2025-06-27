@@ -20,6 +20,8 @@ class BirthdayNotifsBot:
         self.credential = DefaultAzureCredential()
         self.container: None | ContainerProxy = None     
            
+    # ____________________ main functionality methods: ____________________
+
     def cosmos_login(self, container_name: str, db_name: str, endpoint: str) -> None:
         """
         Connects to your Azure Cosmos DB account via `DefaultAzureCredential` and populates the `container` attribute 
@@ -120,7 +122,7 @@ class BirthdayNotifsBot:
         header = f"❗❗❗ *There are {upcoming_birthdays} birthdays coming up this week* ❗❗❗"                   
         return header + '\n' + '\n'.join(final_text_output)
 
-    @staticmethod  # placing this method here, as it is integral to the intended 'flow' of the class
+    @staticmethod
     async def send_message(bot_token: str, chat_id: str, text: str, parse_mode: str ="Markdown") -> None:
         """Sends a text message to a Telegram bot 
         
@@ -432,6 +434,22 @@ class BirthdayNotifsBot:
             if extra_days:
                 raise ValueError(f"Found extra days: {extra_days}, in your JSON schema for month '{month_name}'")
 
+    @staticmethod
+    def _month_num_to_name(month_num: str | int) -> str:
+        """Converts a month number to its corresponding calendar name (e.g. '06' -> 'June')"""
+        if not isinstance(month_num, (str, int)):
+            raise TypeError("Date passed must be of type str or int")
+
+        if not str(month_num).isdigit():
+            raise ValueError(f"Expected integer value for 'month_num' parameter, got '{month_num}'")        
+
+        try:
+            return calendar_month_names[int(month_num)]
+
+        except Exception as e:
+            logging.error(f"Could not convert your 'month_num' value to a calendar month name: {str(e)}")
+            raise
+    
     @staticmethod
     def _generate_json_skeleton(json_month_key: str = 'month_name', json_day_key: str = 'days') -> list:
         """Generates a full Cosmos DB calendar skeleton (non-leap-year) and returns it as a list of OrderedDict"""
